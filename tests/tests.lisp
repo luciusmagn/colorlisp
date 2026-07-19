@@ -58,6 +58,12 @@ echo yes
          "unknown pathname returns nil"))
 
 
+(defun test-native-library ()
+  "Test that packagers can materialize and locate the native library."
+  (check (probe-file (colorlisp:native-library-path))
+         "native library pathname exists"))
+
+
 (defun test-supported-grammars ()
   "Smoke-test every bundled grammar and query."
   (dolist
@@ -137,6 +143,7 @@ end
 (defun run-tests ()
   "Run the complete ColorLisp test suite and return true on success."
   (setf *failures* nil)
+  (test-native-library)
   (test-language-registry)
   (test-supported-grammars)
   (test-semantic-output)

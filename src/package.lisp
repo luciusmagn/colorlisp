@@ -11,6 +11,7 @@
    #:language-name
    #:language-names
    #:native-build-error
+   #:native-library-path
    #:query-error
    #:query-error-language
    #:query-error-offset

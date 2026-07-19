@@ -164,9 +164,14 @@
        cached))))
 
 
+(defun native-library-path ()
+  "Build when needed and return ColorLisp's native library pathname."
+  (colorlisp--native-library-path))
+
+
 (defun native-ensure-loaded ()
   "Build when needed and load ColorLisp's native Tree-sitter library."
   (unless *native-library*
     (setf *native-library*
-          (cffi:load-foreign-library (colorlisp--native-library-path))))
+          (cffi:load-foreign-library (native-library-path))))
   *native-library*)
