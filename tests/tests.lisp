@@ -140,6 +140,16 @@ end
            "unknown source is plain")))
 
 
+(defun test-capture-normalization ()
+  "Test normalization of grammar-specific capture names."
+  (let ((categories
+          (mapcar #'colorlisp:segment-category
+                  (colorlisp:highlight-segments
+                   "fn main() { 42 }" :language :rust))))
+    (check (member :number categories)
+           "numeric constants normalize to the number category")))
+
+
 (defun run-tests ()
   "Run the complete ColorLisp test suite and return true on success."
   (setf *failures* nil)
@@ -147,6 +157,7 @@ end
   (test-language-registry)
   (test-supported-grammars)
   (test-semantic-output)
+  (test-capture-normalization)
   (if *failures*
       (progn
         (format *error-output* "~&ColorLisp failures:~%")
