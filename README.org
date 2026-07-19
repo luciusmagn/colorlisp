@@ -1,0 +1,34 @@
+#+title: ColorLisp
+
+ColorLisp is a style-neutral syntax-highlighting library for Common Lisp
+applications. It parses source with pinned Tree-sitter grammars and returns
+semantic spans or complete text segments. The caller decides how categories
+such as =:keyword=, =:string=, and =:comment= look.
+
+#+begin_src lisp
+(colorlisp:highlight-segments "(defun greet (name) (format t \"Hi, ~A\" name))"
+                              :language :common-lisp)
+#+end_src
+
+Language detection accepts a pathname and, for extensionless scripts, an
+optional shebang. Explicit language selection accepts the canonical names and
+common aliases.
+
+Supported languages are Common Lisp, Scheme, Rust, C, C++, Python, Go, shell,
+TOML, JavaScript, TypeScript, TSX, JSON, YAML, Markdown, HTML, CSS, Nix, Java,
+Ruby, and Lua.
+
+ColorLisp builds one private native library in the XDG cache on first use. A
+packager can ship =native/libcolorlisp-tree-sitter.so= beside the system, or
+set =COLORLISP_NATIVE_LIBRARY= to a packaged copy. The native library is not
+installed on the user's executable search path.
+
+Run the complete check with:
+
+#+begin_src sh
+./script/check
+#+end_src
+
+ColorLisp is licensed under the MIT license. Vendored components retain their
+own licenses in =vendor/licenses/= and their exact revisions are recorded in
+=vendor/README.org=.
