@@ -13,6 +13,9 @@ Grammars:
 - tree-sitter/tree-sitter-rust :: =77a3747266f4d621d0757825e6b11edcbf991ca5=
 - tree-sitter-grammars/tree-sitter-commonlisp :: =32323509b3d9fe96607d151c2da2c9009eb13a2f=
 - 6cdh/tree-sitter-scheme :: =c6cb7c7d7a04b3f5d999c28e2e9c0c31b2d50ece=
+- sogaiu/tree-sitter-clojure :: =e43eff80d17cf34852dcd92ca5e6986d23a7040f=
+- tree-sitter/tree-sitter-haskell :: =0975ef72fc3c47b530309ca93937d7d143523628=
+- tree-sitter/tree-sitter-ocaml :: =6902a86ab5b3b80c622030210aae2d8cb95eb775= (v0.25.0)
 - tree-sitter/tree-sitter-c :: =b780e47fc780ddc8da13afa35a3f4ed5c157823d=
 - tree-sitter/tree-sitter-python :: =26855eabccb19c6abf499fbc5b8dc7cc9ab8bc64=
 - tree-sitter/tree-sitter-go :: =2346a3ab1bb3857b48b29d779a1ef9799a248cd7=

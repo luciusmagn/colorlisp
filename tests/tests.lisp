@@ -20,11 +20,30 @@
                   (colorlisp:highlight-segments source :language language))))
 
 
+(defun source--category-at (source language text)
+  "Return the highlight category at the first occurrence of TEXT in SOURCE."
+  (let ((position (search text source)))
+    (and position
+         (loop for span in (colorlisp:highlight-spans source :language language)
+               when (and (<= (colorlisp:span-start span) position)
+                         (< position (colorlisp:span-end span)))
+                 return (colorlisp:span-category span)
+               finally (return :plain)))))
+
+
 (defun test-language-registry ()
   "Test explicit aliases and pathname detection."
   (dolist (case '(("file.rs" :rust)
                   ("system.asd" :common-lisp)
                   ("file.scm" :scheme)
+                  ("file.clj" :clojure)
+                  ("file.cljc" :clojure)
+                  ("file.cljs" :clojure)
+                  ("script.bb" :clojure)
+                  ("file.hs" :haskell)
+                  ("file.hs-boot" :haskell)
+                  ("file.ml" :ocaml)
+                  ("file.mli" :ocaml-interface)
                   ("file.c" :c)
                   ("file.hpp" :cpp)
                   ("file.py" :python)
@@ -54,6 +73,22 @@
 echo yes
 ")))
          "detect shell shebang")
+  (dolist (case '(("#!/usr/bin/env bb" :clojure)
+                  ("#!/usr/bin/env runghc" :haskell)
+                  ("#!/usr/bin/env ocaml" :ocaml)))
+    (check (eq (second case)
+               (colorlisp:language-name
+                (colorlisp:language-detect "script" :source (first case))))
+           (format nil "detect ~A shebang" (second case))))
+  (dolist (case '(("clojurescript" :clojure)
+                  ("hs" :haskell)
+                  ("ml" :ocaml)
+                  ("mli" :ocaml-interface)
+                  ("ocaml_interface" :ocaml-interface)))
+    (check (eq (second case)
+               (colorlisp:language-name
+                (colorlisp:language-find (first case))))
+           (format nil "resolve ~A alias" (first case))))
   (check (null (colorlisp:language-detect "README"))
          "unknown pathname returns nil"))
 
@@ -84,6 +119,19 @@ echo yes
       (case
        '((:common-lisp "(defun hello (name) (format t \"Hello, ~A\" name))")
          (:scheme "(define (square x) (* x x))")
+         (:clojure "(ns colorlisp.core)
+(defn greet [name]
+  ; greeting
+  (println \"Hello\" name :ok 42 true nil))")
+         (:haskell "module Main where
+main :: IO ()
+main = putStrLn \"Hello\"
+")
+         (:ocaml "let greet name =
+  Printf.printf \"Hello, %s!\\n\" name
+")
+         (:ocaml-interface "val greet : string -> unit
+")
          (:rust "fn main() { let answer: i32 = 42; }")
          (:c "int main(void) { return 0; }")
          (:cpp "class Example { public: int value() const { return 1; } };")
@@ -129,6 +177,50 @@ end
               *failures*)))))
 
 
+(defun test-new-language-semantics ()
+  "Test useful semantic distinctions in the new language queries."
+  (let ((source "(ns colorlisp.core)
+(defn greet [name]
+  ; greeting
+  (println \"Hello\" name :ok 42 true nil))"))
+    (check (eq :keyword (source--category-at source :clojure "ns"))
+           "Clojure namespace form is a keyword")
+    (check (eq :namespace
+               (source--category-at source :clojure "colorlisp.core"))
+           "Clojure namespace name")
+    (check (eq :keyword (source--category-at source :clojure "defn"))
+           "Clojure definition form is a keyword")
+    (check (eq :function (source--category-at source :clojure "greet"))
+           "Clojure definition name is a function"))
+  (let ((source "module Main where
+main :: IO ()
+main = putStrLn \"Hello\"
+letter = 'x'
+"))
+    (check (eq :function (source--category-at source :haskell "main"))
+           "Haskell main is a function")
+    (check (eq :type (source--category-at source :haskell "IO"))
+           "Haskell type constructor")
+    (check (eq :string (source--category-at source :haskell "'x'"))
+           "Haskell character literal normalizes to string"))
+  (let ((implementation "let greet name = String.length name
+")
+        (interface "val greet : string -> int
+"))
+    (check (eq :keyword
+               (source--category-at implementation :ocaml "let"))
+           "OCaml implementation keyword")
+    (check (eq :function
+               (source--category-at implementation :ocaml "greet"))
+           "OCaml implementation function")
+    (check (eq :keyword
+               (source--category-at interface :ocaml-interface "val"))
+           "OCaml interface keyword")
+    (check (eq :function
+               (source--category-at interface :ocaml-interface "greet"))
+           "OCaml interface function")))
+
+
 (defun test-semantic-output ()
   "Test semantic categories, complete coverage, and Unicode offsets."
   (let* ((source "(defun λ-name (value) ; note
@@ -171,6 +263,7 @@ end
   (test-native-include-arguments)
   (test-language-registry)
   (test-supported-grammars)
+  (test-new-language-semantics)
   (test-semantic-output)
   (test-capture-normalization)
   (if *failures*

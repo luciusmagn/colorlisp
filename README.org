@@ -14,9 +14,9 @@ Language detection accepts a pathname and, for extensionless scripts, an
 optional shebang. Explicit language selection accepts the canonical names and
 common aliases.
 
-Supported languages are Common Lisp, Scheme, Rust, C, C++, Python, Go, shell,
-TOML, JavaScript, TypeScript, TSX, JSON, YAML, Markdown, HTML, CSS, Nix, Java,
-Ruby, and Lua.
+Supported languages are Common Lisp, Scheme, Clojure, Haskell, OCaml and OCaml
+interfaces, Rust, C, C++, Python, Go, shell, TOML, JavaScript, TypeScript, TSX,
+JSON, YAML, Markdown, HTML, CSS, Nix, Java, Ruby, and Lua.
 
 ColorLisp builds one private native library in the XDG cache on first use. A
 packager can ship =native/libcolorlisp-tree-sitter.so= beside the system, or

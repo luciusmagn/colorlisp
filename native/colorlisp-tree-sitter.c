@@ -22,6 +22,10 @@ typedef struct {
 const TSLanguage *tree_sitter_rust(void);
 const TSLanguage *tree_sitter_commonlisp(void);
 const TSLanguage *tree_sitter_scheme(void);
+const TSLanguage *tree_sitter_clojure(void);
+const TSLanguage *tree_sitter_haskell(void);
+const TSLanguage *tree_sitter_ocaml(void);
+const TSLanguage *tree_sitter_ocaml_interface(void);
 const TSLanguage *tree_sitter_c(void);
 const TSLanguage *tree_sitter_python(void);
 const TSLanguage *tree_sitter_go(void);
@@ -46,6 +50,12 @@ static const TSLanguage *colorlisp_language_named(const char *name) {
   if (strcmp(name, "rust") == 0) return tree_sitter_rust();
   if (strcmp(name, "commonlisp") == 0) return tree_sitter_commonlisp();
   if (strcmp(name, "scheme") == 0) return tree_sitter_scheme();
+  if (strcmp(name, "clojure") == 0) return tree_sitter_clojure();
+  if (strcmp(name, "haskell") == 0) return tree_sitter_haskell();
+  if (strcmp(name, "ocaml") == 0) return tree_sitter_ocaml();
+  if (strcmp(name, "ocaml_interface") == 0) {
+    return tree_sitter_ocaml_interface();
+  }
   if (strcmp(name, "c") == 0) return tree_sitter_c();
   if (strcmp(name, "python") == 0) return tree_sitter_python();
   if (strcmp(name, "go") == 0) return tree_sitter_go();

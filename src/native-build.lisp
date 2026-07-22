@@ -2,7 +2,7 @@
 
 
 (defparameter *native-cache-version*
-  "0.1.0-ts-0.26.11-20260720"
+  "0.2.0-ts-0.26.11-20260722"
   "Version key for native sources and vendored grammars.")
 
 (defvar *native-library* nil
@@ -48,6 +48,13 @@
        "vendor/grammars/rust/scanner.c"
        "vendor/grammars/common-lisp/parser.c"
        "vendor/grammars/scheme/parser.c"
+       "vendor/grammars/clojure/parser.c"
+       "vendor/grammars/haskell/parser.c"
+       "vendor/grammars/haskell/scanner.c"
+       "vendor/grammars/ocaml/grammars/ocaml/src/parser.c"
+       "vendor/grammars/ocaml/grammars/ocaml/src/scanner.c"
+       "vendor/grammars/ocaml/grammars/interface/src/parser.c"
+       "vendor/grammars/ocaml/grammars/interface/src/scanner.c"
        "vendor/grammars/c/parser.c"
        "vendor/grammars/python/parser.c"
        "vendor/grammars/python/scanner.c"
@@ -95,6 +102,10 @@
        "vendor/grammars/rust/"
        "vendor/grammars/common-lisp/"
        "vendor/grammars/scheme/"
+       "vendor/grammars/clojure/"
+       "vendor/grammars/haskell/"
+       "vendor/grammars/ocaml/grammars/ocaml/src/"
+       "vendor/grammars/ocaml/grammars/interface/src/"
        "vendor/grammars/c/"
        "vendor/grammars/python/"
        "vendor/grammars/go/"

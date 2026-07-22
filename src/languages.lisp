@@ -53,6 +53,19 @@
    (language--create :scheme "scheme"
                      :aliases '("scm")
                      :extensions '("scm" "ss" "sld"))
+   (language--create :clojure "clojure"
+                     :aliases '("clj" "cljc" "cljs" "clojurescript"
+                                "bb" "babashka")
+                     :extensions '("bb" "clj" "cljc" "cljs"))
+   (language--create :haskell "haskell"
+                     :aliases '("hs")
+                     :extensions '("hs" "hs-boot"))
+   (language--create :ocaml "ocaml"
+                     :aliases '("ml")
+                     :extensions '("ml"))
+   (language--create :ocaml-interface "ocaml_interface"
+                     :aliases '("mli" "ocaml_interface")
+                     :extensions '("mli"))
    (language--create :rust "rust"
                      :aliases '("rs")
                      :extensions '("rs"))
@@ -193,6 +206,13 @@ When ERRORP is false, return NIL for an unsupported designator."
         ((or (search "scheme" line) (search "guile" line)
              (search "racket" line))
          (language-find :scheme))
+        ((or (search "babashka" line) (search "/bb" line)
+             (search " bb" line) (search "clojure" line))
+         (language-find :clojure))
+        ((or (search "runghc" line) (search "runhaskell" line))
+         (language-find :haskell))
+        ((search "ocaml" line)
+         (language-find :ocaml))
         (t
          nil)))))
 

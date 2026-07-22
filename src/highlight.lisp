@@ -278,7 +278,10 @@
       ((string= name "none") :plain)
       ((or (search "comment" name) (string= name "spell")) :comment)
       ((search "escape" name) :escape)
-      ((or (search "string" name) (string= name "text.literal")) :string)
+      ((or (search "string" name)
+           (search "character" name)
+           (string= name "text.literal"))
+       :string)
       ((search "keyword" name) :keyword)
       ((search "operator" name) :operator)
       ((search "punctuation" name) :punctuation)
@@ -292,7 +295,10 @@
       ((search "method" name) :method)
       ((search "function" name) :function)
       ((search "parameter" name) :parameter)
-      ((or (search "property" name) (search "field" name)) :property)
+      ((or (search "property" name)
+           (search "field" name)
+           (search "member" name))
+       :property)
       ((search "variable.builtin" name) :builtin)
       ((search "variable" name) :variable)
       ((or (search "module" name) (search "namespace" name)) :namespace)
@@ -303,6 +309,13 @@
       ((search "embedded" name) :embedded)
       ((search "special" name) :special)
       (t :plain))))
+
+
+(defun colorlisp--auxiliary-capture-p (capture)
+  "Return true when CAPTURE only supports a query predicate."
+  (let ((name (raw-capture-capture-name capture)))
+    (and (plusp (length name))
+         (char= #\_ (char name 0)))))
 
 
 (defun colorlisp--capture->span (capture byte-map)
@@ -385,9 +398,9 @@ Offsets are Common Lisp character offsets, not UTF-8 byte offsets."
                              grammar query source source-octets byte-map))))
         (colorlisp--resolve-spans
          source
-         (mapcar (lambda (capture)
-                   (colorlisp--capture->span capture byte-map))
-                 captures))))))
+         (loop for capture in captures
+               unless (colorlisp--auxiliary-capture-p capture)
+                 collect (colorlisp--capture->span capture byte-map)))))))
 
 
 (defun highlight-segments (source &key language pathname)
