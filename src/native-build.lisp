@@ -91,6 +91,7 @@
      (lambda (relative)
        (format nil "-I~A" (namestring (merge-pathnames relative root))))
      '("vendor/tree-sitter/include/"
+       "vendor/tree-sitter/src/"
        "vendor/grammars/rust/"
        "vendor/grammars/common-lisp/"
        "vendor/grammars/scheme/"

@@ -64,6 +64,20 @@ echo yes
          "native library pathname exists"))
 
 
+(defun test-native-include-arguments ()
+  "Test that native builds use the vendored Tree-sitter runtime headers."
+  (let ((expected
+          (format nil "-I~A"
+                  (namestring
+                   (merge-pathnames
+                    "vendor/tree-sitter/src/"
+                    (asdf:system-source-directory "colorlisp"))))))
+    (check (member expected
+                   (colorlisp::colorlisp--native-include-arguments)
+                   :test #'string=)
+           "native build includes vendored Tree-sitter source headers")))
+
+
 (defun test-supported-grammars ()
   "Smoke-test every bundled grammar and query."
   (dolist
@@ -154,6 +168,7 @@ end
   "Run the complete ColorLisp test suite and return true on success."
   (setf *failures* nil)
   (test-native-library)
+  (test-native-include-arguments)
   (test-language-registry)
   (test-supported-grammars)
   (test-semantic-output)
